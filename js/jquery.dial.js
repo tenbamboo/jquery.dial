@@ -66,7 +66,8 @@ Wilq32.PhotoEffect=(function(){
 		}
 	} else {
 		return function(img,parameters) {
-			// Make sure that class and id are also copied - just in case you would like to refeer to an newly created object
+			// Make sure that class and id are also copied - just in case you
+			// would like to refeer to an newly created object
             this._img = img;
 
 			this._rootObj=document.createElement('span');
@@ -145,16 +146,33 @@ Wilq32.PhotoEffect.prototype={
 			this._vimage.src=this._img.src;
 			this._vimage.style.height=height+"px";
 			this._vimage.style.width=width+"px";
-			this._vimage.style.position="absolute"; // FIXES IE PROBLEM - its only rendered if its on absolute position!
+			this._vimage.style.position="absolute"; // FIXES IE PROBLEM - its
+													// only rendered if its on
+													// absolute position!
 			this._vimage.style.top = "0px";
 			this._vimage.style.left = "0px";
 
-			/* Group minifying a small 1px precision problem when rotating object */
+			/*
+			 * Group minifying a small 1px precision problem when rotating
+			 * object
+			 */
 			this._container =  this.createVMLNode('group');
 			this._container.style.width=width;
 			this._container.style.height=height;
 			this._container.style.position="absolute";
-			this._container.setAttribute('coordsize',width-1+','+(height-1)); // This -1, -1 trying to fix ugly problem with small displacement on IE
+			this._container.setAttribute('coordsize',width-1+','+(height-1)); // This
+																				// -1,
+																				// -1
+																				// trying
+																				// to
+																				// fix
+																				// ugly
+																				// problem
+																				// with
+																				// small
+																				// displacement
+																				// on
+																				// IE
 			this._container.appendChild(this._vimage);
 			
 			this._rootObj.appendChild(this._container);
@@ -180,7 +198,8 @@ Wilq32.PhotoEffect.prototype={
 			var _widthMax=Math.sqrt((this._height)*(this._height) + (this._width) * (this._width));
 
 			this._widthAdd = _widthMax - this._width;
-			this._heightAdd = _widthMax - this._height;	// widthMax because maxWidth=maxHeight
+			this._heightAdd = _widthMax - this._height;	// widthMax because
+														// maxWidth=maxHeight
 			this._widthAddHalf=this._widthAdd/2; // used for optimisation
 			this._heightAddHalf=this._heightAdd/2;// used for optimisation
 			
@@ -241,7 +260,8 @@ Wilq32.PhotoEffect.prototype={
                      }, 10);
          }
 
-         // To fix Bug that prevents using recursive function in callback I moved this function to back
+         // To fix Bug that prevents using recursive function in callback I
+			// moved this function to back
          if (this._parameters.callback && checkEnd){
              this._angle = this._parameters.animateTo;
              this._rotate(this._angle);
@@ -268,17 +288,45 @@ Wilq32.PhotoEffect.prototype={
 		{
             this._angle = angle;
 			angle=(angle%360)* rad;
-			// clear canvas	
+			// clear canvas
 			this._canvas.width = this._width+this._widthAdd;
 			this._canvas.height = this._height+this._heightAdd;
 						
-			// REMEMBER: all drawings are read from backwards.. so first function is translate, then rotate, then translate, translate..
-			this._cnv.translate(this._widthAddHalf,this._heightAddHalf);	// at least center image on screen
-			this._cnv.translate(this._widthHalf,this._heightHalf);			// we move image back to its orginal 
-			this._cnv.rotate(angle);										// rotate image
-			this._cnv.translate(-this._widthHalf,-this._heightHalf);		// move image to its center, so we can rotate around its center
-			this._cnv.scale(this._aspectW,this._aspectH); // SCALE - if needed ;)
-			this._cnv.drawImage(this._img, 0, 0);							// First - we draw image
+			// REMEMBER: all drawings are read from backwards.. so first
+			// function is translate, then rotate, then translate, translate..
+			this._cnv.translate(this._widthAddHalf,this._heightAddHalf);	// at
+																			// least
+																			// center
+																			// image
+																			// on
+																			// screen
+			this._cnv.translate(this._widthHalf,this._heightHalf);			// we
+																			// move
+																			// image
+																			// back
+																			// to
+																			// its
+																			// orginal
+			this._cnv.rotate(angle);										// rotate
+																			// image
+			this._cnv.translate(-this._widthHalf,-this._heightHalf);		// move
+																			// image
+																			// to
+																			// its
+																			// center,
+																			// so
+																			// we
+																			// can
+																			// rotate
+																			// around
+																			// its
+																			// center
+			this._cnv.scale(this._aspectW,this._aspectH); // SCALE - if needed
+															// ;)
+			this._cnv.drawImage(this._img, 0, 0);							// First
+																			// - we
+																			// draw
+																			// image
 		}
 
 	})()
@@ -301,54 +349,58 @@ document.createStyleSheet().addRule(".rvml", "behavior:url(#default#VML)");
 })();
 }
 })(jQuery);
-//routate lib end
+// routate lib end
 
 
 
 
 
 /**
-* @todo Dial
-* @namespace Dial
-* @author haze.liu
-* @since 2017年04月13日 11:05:22
-*/
+ * @todo Dial
+ * @namespace Dial
+ * @author haze.liu
+ * @since 2017年04月13日 11:05:22
+ */
 (function($) {
 
 
-//option 
-//item 值(num),对应数组下标
-//restaraunts 转盘文字描述（array）
-//colors 转盘文字背景颜色（array）
-//callback 成功执行完的回调(item)回调中返回item值
+// option
+// item 值(num),对应数组下标
+// restaraunts 转盘文字描述（array）
+// colors 转盘文字背景颜色（array）
+// callback 成功执行完的回调(item)回调中返回item值
 
-//完整Demo
-//$(dom).dial({
+// 完整Demo
+// $(dom).dial({
 	// restaraunts:['奖品1','奖品2','奖品3'],
 	// colors:['#fff','#000','#fff'],
 	// item:1,
 	// callback:function(item){console.log(item)},
 // })
 
-//method
-//$(dom).dial('start') or  $(dom).dial('start',itemValue); //开启轮盘转动
-//$(dom).dial('setItem',itemValue); //单纯设置值
-//$(dom).dial('enabled'); //设置为可转动状态
-//$(dom).dial('disabled'); //设置为不可转动状态
+// method
+// $(dom).dial('start') or $(dom).dial('start',itemValue); //开启轮盘转动
+// $(dom).dial('setItem',itemValue); //单纯设置值
+// $(dom).dial('enabled'); //设置为可转动状态
+// $(dom).dial('disabled'); //设置为不可转动状态
 
 var Dial= function (element, options) {
 	this.element = $(element);
 	this.turnplate={
-		item:options.item || 0,  //中奖值
-		restaraunts:options.restaraunts || [],				//大转盘奖品名称
-		colors:options.colors || [],					//大转盘奖品区块对应背景颜色
-		outsideRadius:192,			//大转盘外圆的半径
-		textRadius:155,				//大转盘奖品位置距离圆心的距离
-		insideRadius:68,			//大转盘内圆的半径
-		startAngle:0,				//开始角度
-		bRotate:false,				//false:停止;ture:旋转
-		callback:options.callback || function(){}, //回调
+		item:options.item || 0,  // 中奖值
+		items:options.items || [],
+// restaraunts:options.restaraunts || [], //大转盘奖品名称
+// colors:options.colors || [], //大转盘奖品区块对应背景颜色
+		outsideRadius:192,			// 大转盘外圆的半径
+		textRadius:155,				// 大转盘奖品位置距离圆心的距离
+		insideRadius:68,			// 大转盘内圆的半径
+		startAngle:0,				// 开始角度
+		bRotate:false,				// false:停止;ture:旋转
+		callback:options.callback || function(){}, // 回调
+		startClick:options.startClick, // 点击开始的时候回调
 	};
+// this.param={}
+// this.param.click =
 	this._init();
 }
 Dial.prototype ={
@@ -359,44 +411,46 @@ Dial.prototype ={
 		this._initEvent();
 	},
 	/**
-	  * @public
-	  * @function
-	  * @todo 不可用转动轮盘
-	  * @memberof Dial
-	  */	
+	 * @public
+	 * @function
+	 * @todo 设置转动轮盘
+	 * @memberof Dial
+	 */	
 	setItem:function(item){
 		var turnplate=this.turnplate;
-		if(item > turnplate.restaraunts.length + 1 ){
+		if(item > turnplate.items.length + 1 ){
 			return;
 		}
 		this.turnplate.item=item;
 	},
 	/**
-	  * @public
-	  * @function
-	  * @todo 不可用转动轮盘
-	  * @memberof Dial
-	  */	
+	 * @public
+	 * @function
+	 * @todo 不可用转动轮盘
+	 * @memberof Dial
+	 */	
 	disabled:function(){
 		this.turnplate.bRotate = !this.turnplate.bRotate;
 	},
 	/**
-	  * @public
-	  * @function
-	  * @todo 可用转动轮盘
-	  * @memberof Dial
-	  */	
+	 * @public
+	 * @function
+	 * @todo 可用转动轮盘
+	 * @memberof Dial
+	 */	
 	enabled:function(){
 		this.turnplate.bRotate = !this.turnplate.bRotate;
 	},
 	/**
-	  * @public
-	  * @function
-	  * @todo 开始转动轮盘
-	  * @param {Num} item - 奖品队列中中奖位置(数组下标)
-	  * @param {Fun} callback - 完成回调
-	  * @memberof Dial
-	  */	
+	 * @public
+	 * @function
+	 * @todo 开始转动轮盘
+	 * @param {Num}
+	 *            item - 奖品队列中中奖位置(数组下标)
+	 * @param {Fun}
+	 *            callback - 完成回调
+	 * @memberof Dial
+	 */	
 	start:function(item){
 		var turnplate=this.turnplate;
 		if(item){
@@ -407,20 +461,22 @@ Dial.prototype ={
 			return;
 		}
 		turnplate.bRotate = !turnplate.bRotate;
-		//获取随机数(奖品个数范围内)
+		// 获取随机数(奖品个数范围内)
 		this._rotateFn(turnplate.item,turnplate.callback);
 	},
 	/**
-	  * @private
-	  * @function
-	  * @todo 转动轮盘
-	  * @param {Num} item - 奖品队列中中奖位置(数组下标)
-	  * @param {Fun} callback - 完成回调
-	  * @memberof Dial
-	  */	
+	 * @private
+	 * @function
+	 * @todo 转动轮盘
+	 * @param {Num}
+	 *            item - 奖品队列中中奖位置(数组下标)
+	 * @param {Fun}
+	 *            callback - 完成回调
+	 * @memberof Dial
+	 */	
 	_rotateFn : function (item, callback){
 		var turnplate=this.turnplate;
-		var angles = item * (360 / turnplate.restaraunts.length) - (360 / (turnplate.restaraunts.length*2));
+		var angles = (item+1) * (360 / turnplate.items.length) - (360 / (turnplate.items.length*2));
 		if(angles<270){
 			angles = 270 - angles; 
 		}else{
@@ -434,29 +490,36 @@ Dial.prototype ={
 			callback:function (){
 				turnplate.bRotate = !turnplate.bRotate;
 				if(callback){
-					callback(item);
+					callback(turnplate.items[item]);
 				}
 			}
 		});
 	},
 	/**
-	  * @private
-	  * @function
-	  * @todo 初始化事件
-	  * @memberof Dial
-	  */	
+	 * @private
+	 * @function
+	 * @todo 初始化事件
+	 * @memberof Dial
+	 */	
 	_initEvent:function(){
 		var that=this;
 		$('.dial .pointer').click(function (){
-			that.start();
+			that.clickStart()
 		});
 	},
+	clickStart:function(){
+		if(this.turnplate.startClick){
+			this.turnplate.startClick()
+		}else{
+			this.start();
+		}
+	},
 	/**
-	  * @private
-	  * @function
-	  * @todo 初始化HTML
-	  * @memberof Dial
-	  */	
+	 * @private
+	 * @function
+	 * @todo 初始化HTML
+	 * @memberof Dial
+	 */	
 	_initHTML:function(){
 		var e=this.element;
 		e.addClass('dial');
@@ -467,48 +530,48 @@ Dial.prototype ={
 		e.append(html);
 	},
 	/**
-	  * @private
-	  * @function
-	  * @todo 画Canvas
-	  * @memberof Dial
-	  */	
+	 * @private
+	 * @function
+	 * @todo 画Canvas
+	 * @memberof Dial
+	 */	
 	_initCanvas:function(){ 
 		var turnplate =this.turnplate;
 		var canvas = document.getElementById("dial_wheelcanvas");   
 	  	if (canvas.getContext) {
-		  //根据奖品个数计算圆周角度
-		  var arc = Math.PI / (turnplate.restaraunts.length/2);
+		  // 根据奖品个数计算圆周角度
+		  var arc = Math.PI / (turnplate.items.length/2);
 		  var ctx = canvas.getContext("2d");
-		  //在给定矩形内清空一个矩形
+		  // 在给定矩形内清空一个矩形
 		  ctx.clearRect(0,0,422,422);
-		  //strokeStyle 属性设置或返回用于笔触的颜色、渐变或模式  
+		  // strokeStyle 属性设置或返回用于笔触的颜色、渐变或模式
 		  ctx.strokeStyle = "#FFBE04";
-		  //font 属性设置或返回画布上文本内容的当前字体属性
+		  // font 属性设置或返回画布上文本内容的当前字体属性
 		  ctx.font = '16px Microsoft YaHei';      
-		  for(var i = 0; i < turnplate.restaraunts.length; i++) {       
+		  for(var i = 0; i < turnplate.items.length; i++) {       
 			  var angle = turnplate.startAngle + i * arc;
-			  ctx.fillStyle = turnplate.colors[i];
+			  ctx.fillStyle = turnplate.items[i].color;
 			  ctx.beginPath();
-			  //arc(x,y,r,起始角,结束角,绘制方向) 方法创建弧/曲线（用于创建圆或部分圆）    
+			  // arc(x,y,r,起始角,结束角,绘制方向) 方法创建弧/曲线（用于创建圆或部分圆）
 			  ctx.arc(211, 211, turnplate.outsideRadius, angle, angle + arc, false);    
 			  ctx.arc(211, 211, turnplate.insideRadius, angle + arc, angle, true);
 			  ctx.stroke();  
 			  ctx.fill();
-			  //锁画布(为了保存之前的画布状态)
+			  // 锁画布(为了保存之前的画布状态)
 			  ctx.save();   
 			  
-			  //----绘制奖品开始----
+			  // ----绘制奖品开始----
 			  ctx.fillStyle = "#E5302F";
-			  var text = turnplate.restaraunts[i];
+			  var text = turnplate.items[i].name;
 			  var line_height = 17;
-			  //translate方法重新映射画布上的 (0,0) 位置
+			  // translate方法重新映射画布上的 (0,0) 位置
 			  ctx.translate(211 + Math.cos(angle + arc / 2) * turnplate.textRadius, 211 + Math.sin(angle + arc / 2) * turnplate.textRadius);
 			  
-			  //rotate方法旋转当前的绘图
+			  // rotate方法旋转当前的绘图
 			  ctx.rotate(angle + arc / 2 + Math.PI / 2);
 			  
-			  /** 下面代码根据奖品类型、奖品名称长度渲染不同效果，如字体、颜色、图片效果。(具体根据实际情况改变) **/
-			  if(text.indexOf("M")>0){//流量包
+			  /** 下面代码根据奖品类型、奖品名称长度渲染不同效果，如字体、颜色、图片效果。(具体根据实际情况改变) * */
+			  if(text.indexOf("M")>0){// 流量包
 				  var texts = text.split("M");
 				  for(var j = 0; j<texts.length; j++){
 					  ctx.font = j == 0?'bold 20px Microsoft YaHei':'16px Microsoft YaHei';
@@ -518,35 +581,35 @@ Dial.prototype ={
 						  ctx.fillText(texts[j], -ctx.measureText(texts[j]).width / 2, j * line_height);
 					  }
 				  }
-			  }else if(text.indexOf("M") == -1 && text.length>6){//奖品名称长度超过一定范围 
+			  }else if(text.indexOf("M") == -1 && text.length>6){// 奖品名称长度超过一定范围
 				  text = text.substring(0,6)+"||"+text.substring(6);
 				  var texts = text.split("||");
 				  for(var j = 0; j<texts.length; j++){
 					  ctx.fillText(texts[j], -ctx.measureText(texts[j]).width / 2, j * line_height);
 				  }
 			  }else{
-				  //在画布上绘制填色的文本。文本的默认颜色是黑色
-				  //measureText()方法返回包含一个对象，该对象包含以像素计的指定字体宽度
+				  // 在画布上绘制填色的文本。文本的默认颜色是黑色
+				  // measureText()方法返回包含一个对象，该对象包含以像素计的指定字体宽度
 				  ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
 			  }
 			  
-			  //添加对应图标
-			  if(text.indexOf("闪币")>0){
-				  var img= document.getElementById("shan-img");
-				  img.onload=function(){  
-					  ctx.drawImage(img,-15,10);      
-				  }; 
-				  ctx.drawImage(img,-15,10);  
-			  }else if(text.indexOf("谢谢参与")>=0){
-				  var img= document.getElementById("sorry-img");
-				  img.onload=function(){  
-					  ctx.drawImage(img,-15,10);      
-				  };  
-				  ctx.drawImage(img,-15,10);  
-			  }
-			  //把当前画布返回（调整）到上一个save()状态之前 
+			  // 添加对应图标
+// if(text.indexOf("闪币")>0){
+// var img= document.getElementById("shan-img");
+// img.onload=function(){
+// ctx.drawImage(img,-15,10);
+// };
+// ctx.drawImage(img,-15,10);
+// }else if(text.indexOf("谢谢参与")>=0){
+// var img= document.getElementById("sorry-img");
+// img.onload=function(){
+// ctx.drawImage(img,-15,10);
+// };
+// ctx.drawImage(img,-15,10);
+// }
+			  // 把当前画布返回（调整）到上一个save()状态之前
 			  ctx.restore();
-			  //----绘制奖品结束----
+			  // ----绘制奖品结束----
 		  }     
 	  } 
 	},
